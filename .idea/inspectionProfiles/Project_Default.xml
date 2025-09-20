@@ -1,0 +1,65 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="VulnerableLibrariesLocal" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="isIgnoringEnabled" value="true" />
+      <option name="ignoredModules">
+        <list>
+          <option value="workshopTelegramBot" />
+          <option value="workshopTelegramBot" />
+          <option value="workshopTelegramBot" />
+          <option value="workshopTelegramBot" />
+          <option value="workshopTelegramBot" />
+          <option value="workshopTelegramBot" />
+          <option value="workshopTelegramBot" />
+          <option value="workshopTelegramBot" />
+          <option value="workshopTelegramBot" />
+          <option value="workshopTelegramBot" />
+          <option value="workshopTelegramBot" />
+          <option value="workshopTelegramBot" />
+          <option value="workshopTelegramBot" />
+          <option value="workshopTelegramBot" />
+          <option value="workshopTelegramBot" />
+        </list>
+      </option>
+      <option name="ignoredPackages">
+        <list>
+          <option value="com.google.guava:guava:31.1-jre" />
+          <option value="io.netty:netty-common:4.1.112.Final" />
+          <option value="io.netty:netty-handler:4.1.112.Final" />
+          <option value="org.springframework:spring-webflux:6.1.12" />
+          <option value="net.minidev:json-smart:2.5.1" />
+          <option value="org.xmlunit:xmlunit-core:2.9.1" />
+          <option value="org.apache.commons:commons-lang3:3.13.0" />
+          <option value="ch.qos.logback:logback-classic:1.4.14" />
+          <option value="ch.qos.logback:logback-core:1.4.14" />
+          <option value="org.apache.tomcat.embed:tomcat-embed-core:10.1.28" />
+          <option value="org.springframework:spring-beans:6.1.12" />
+          <option value="org.springframework:spring-webmvc:6.1.12" />
+          <option value="org.springframework:spring-context:6.1.12" />
+          <option value="org.glassfish.grizzly:grizzly-http:4.0.2" />
+          <option value="commons-io:commons-io:2.11.0" />
+        </list>
+      </option>
+      <option name="ignoredReasons">
+        <list>
+          <option value="Not exploitable" />
+          <option value="Not exploitable" />
+          <option value="Not exploitable" />
+          <option value="Not exploitable" />
+          <option value="Not exploitable" />
+          <option value="Not exploitable" />
+          <option value="Not exploitable" />
+          <option value="Not exploitable" />
+          <option value="Not exploitable" />
+          <option value="Not exploitable" />
+          <option value="Not exploitable" />
+          <option value="Not exploitable" />
+          <option value="Not exploitable" />
+          <option value="Not exploitable" />
+          <option value="Not exploitable" />
+        </list>
+      </option>
+    </inspection_tool>
+  </profile>
+</component>

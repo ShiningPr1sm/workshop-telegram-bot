@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Адмін-панель Відгуків</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f7f6;
+            color: #333;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 25px;
+            padding: 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            background-color: #fcfcfc;
+        }
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            min-width: 150px;
+        }
+        .filter-group label {
+            font-size: 0.9em;
+            margin-bottom: 5px;
+            color: #555;
+        }
+        .filter-group input,
+        .filter-group select {
+            padding: 8px 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 0.95em;
+            outline: none;
+        }
+        .filters button {
+            padding: 10px 15px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.2s ease;
+            align-self: flex-end;
+        }
+        .filters button:hover {
+            background-color: #2980b9;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+            font-size: 0.9em;
+        }
+        th {
+            background-color: #ecf0f1;
+            color: #2c3e50;
+            font-weight: bold;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        .no-feedback-message {
+            text-align: center;
+            padding: 20px;
+            color: #7f8c8d;
+            font-style: italic;
+        }
+        .error-message {
+            color: #e74c3c;
+            text-align: center;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Адмін-панель Відгуків СТО</h1>
+
+    <div class="filters">
+        <div class="filter-group">
+            <label for="filterBranch">Філія:</label>
+            <input type="text" id="filterBranch" placeholder="Назва філії">
+        </div>
+        <div class="filter-group">
+            <label for="filterRole">Посада:</label>
+            <select id="filterRole">
+                <option value="">Всі</option>
+                <option value="МЕХАНІК">Механік</option>
+                <option value="ЕЛЕКТРИК">Електрик</option>
+                <option value="МЕНЕДЖЕР">Менеджер</option>
+            </select>
+        </div>
+        <div class="filter-group">
+            <label for="filterCriticality">Критичність (1-5):</label>
+            <input type="number" id="filterCriticality" min="1" max="5" placeholder="Рівень">
+        </div>
+        <div class="filter-group">
+            <label for="filterSentiment">Настрій:</label>
+            <select id="filterSentiment">
+                <option value="">Всі</option>
+                <option value="POSITIVE">Позитивний</option>
+                <option value="NEUTRAL">Нейтральний</option>
+                <option value="NEGATIVE">Негативний</option>
+            </select>
+        </div>
+        <button onclick="loadFeedbacks()">Застосувати фільтри</button>
+        <button onclick="clearFilters()">Скинути фільтри</button>
+    </div>
+
+    <div id="errorMessage" class="error-message" style="display: none;"></div>
+
+    <table id="feedbackTable">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>CHAT_ID</th>
+            <th>ПОСАДА</th>
+            <th>ФІЛІЯ</th>
+            <th>ПОВІДОМЛЕННЯ</th>
+            <th>НАСТРІЙ</th>
+            <th>КРИТИЧНІСТЬ</th>
+            <th>ПРОПОНОВАНЕ РІШЕННЯ</th>
+            <th>ДАТА</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- тут будуть відгуки -->
+        </tbody>
+    </table>
+    <p id="noFeedbackMessage" class="no-feedback-message" style="display: none;">Відгуків не знайдено.</p>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        loadFeedbacks();
+    });
+
+    async function loadFeedbacks() {
+        const filterBranch = document.getElementById('filterBranch').value.trim();
+        const filterRole = document.getElementById('filterRole').value;
+        const filterCriticality = document.getElementById('filterCriticality').value;
+        const filterSentiment = document.getElementById('filterSentiment').value;
+        const errorMessageDiv = document.getElementById('errorMessage');
+        const noFeedbackMessage = document.getElementById('noFeedbackMessage');
+        const feedbackTableBody = document.querySelector('#feedbackTable tbody');
+
+        errorMessageDiv.style.display = 'none';
+        noFeedbackMessage.style.display = 'none';
+        feedbackTableBody.innerHTML = '';
+
+        let apiUrl = '/admin/api/feedbacks?';
+        const params = new URLSearchParams();
+
+        if (filterBranch) params.append('branch', filterBranch);
+        if (filterRole) params.append('role', filterRole);
+        if (filterCriticality) params.append('criticality', filterCriticality);
+        if (filterSentiment) params.append('sentiment', filterSentiment);
+
+        apiUrl += params.toString();
+
+        try {
+            const response = await fetch(apiUrl);
+
+            if (response.status === 204) { // 204 No Content
+                noFeedbackMessage.style.display = 'block';
+                return;
+            }
+
+            if (!response.ok) {
+                const errorData = await response.text();
+                throw new Error(`HTTP error! Status: ${response.status} - ${errorData}`);
+            }
+
+            const feedbacks = await response.json();
+
+            if (feedbacks.length === 0) {
+                noFeedbackMessage.style.display = 'block';
+            } else {
+                feedbacks.forEach(feedback => {
+                    const row = feedbackTableBody.insertRow();
+                    row.insertCell().textContent = feedback.id;
+                    row.insertCell().textContent = feedback.chatId;
+                    row.insertCell().textContent = getUkrainianRole(feedback.employeeRole);
+                    row.insertCell().textContent = feedback.branch;
+                    row.insertCell().textContent = feedback.message;
+                    row.insertCell().textContent = getUkrainianSentiment(feedback.sentiment);
+                    row.insertCell().textContent = feedback.criticalityLevel;
+                    row.insertCell().textContent = feedback.resolutionSuggestion;
+                    row.insertCell().textContent = new Date(feedback.submittedAt).toLocaleString('uk-UA');
+                });
+            }
+
+        } catch (error) {
+            console.error("Error fetching feedbacks:", error);
+            errorMessageDiv.textContent = `Помилка завантаження відгуків: ${error.message}`;
+            errorMessageDiv.style.display = 'block';
+        }
+    }
+
+    function clearFilters() {
+        document.getElementById('filterBranch').value = '';
+        document.getElementById('filterRole').value = '';
+        document.getElementById('filterCriticality').value = '';
+        document.getElementById('filterSentiment').value = '';
+        loadFeedbacks();
+    }
+
+    function getUkrainianRole(role) {
+        switch (role) {
+            case 'МЕХАНІК': return 'Механік';
+            case 'ЕЛЕКТРИК': return 'Електрик';
+            case 'МЕНЕДЖЕР': return 'Менеджер';
+            default: return role;
+        }
+    }
+
+    function getUkrainianSentiment(sentiment) {
+        switch (sentiment) {
+            case 'POSITIVE': return 'Позитивний';
+            case 'NEUTRAL': return 'Нейтральний';
+            case 'NEGATIVE': return 'Негативний';
+            default: return sentiment;
+        }
+    }
+</script>
+</body>
+</html>
