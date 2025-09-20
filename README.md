@@ -23,11 +23,11 @@ To get a local copy up and running, follow these steps.
 
 1.  **Clone the repository:**
     ```bash
-    git clone https://github.com/ShiningPr1sm/workshot-telegram-bot.git
+    git clone https://github.com/ShiningPr1sm/workshop-telegram-bot.git
     ```
 
 2.  **Configure `application.properties`:**
-    Edit [`src/main/resources/application.properties`](https://github.com/ShiningPr1sm/workshot-telegram-bot/blob/master/src/main/resources/application.properties) with your credentials:
+    Edit [`src/main/resources/application.properties`](https://github.com/ShiningPr1sm/workshop-telegram-bot/blob/master/src/main/resources/application.properties) with your credentials:
 
 3.  **Place Google Credentials:**
     *   Place your downloaded Google Service Account JSON key file (e.g., `credentials.json`) into `src/main/resources/`.
